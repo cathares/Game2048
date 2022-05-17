@@ -91,6 +91,7 @@ fun MainMenu(
     }
 }
 
+
 @Destination()
 @ExperimentalMaterialApi
 @Composable
@@ -228,6 +229,7 @@ fun GamingProcess(currPos: MutableState<List<List<Int>>>) {
         }
     }
 }
+
 
 @ExperimentalMaterialApi
 @Composable

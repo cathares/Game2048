@@ -150,6 +150,7 @@ fun changeCells(field: Array<Array<Int>>, direction: String): Array<Array<Int>> 
     return field
 }
 
+
 fun makeTurn(currPos: List<List<Int>>, direction: String): List<List<Int>> {
     var field: Array<Array<Int>> = Array(4) {Array(4) {0} }
     for (i in 0..3) {
