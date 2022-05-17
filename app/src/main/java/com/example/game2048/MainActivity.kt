@@ -139,7 +139,7 @@ fun GameScreen(navigator: DestinationsNavigator) {
                 .border(10.dp, color = Color.DarkGray)
         )
         {
-            fontOfField()
+            backField()
             GamingProcess(currPos)
             Log.e("Currpos", "${currPos.value}")
         }
@@ -233,7 +233,7 @@ fun GamingProcess(currPos: MutableState<List<List<Int>>>) {
 
 @ExperimentalMaterialApi
 @Composable
-fun fontOfField() {
+fun backField() {
     Row()
     {
         repeat(4) {
