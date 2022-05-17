@@ -160,12 +160,7 @@ fun makeTurn(currPos: List<List<Int>>, direction: String): List<List<Int>> {
     field = moveCells(field, direction)
     field = changeCells(field, direction)
     field = moveCells(field, direction)
-    for (i in 0..3) {
-        for (j in 0..3) {
-            print(field[i][j])
-        }
-        println()
-    }
+
     val randCell: Pair<Int, Int> = Random.nextInt(0, 3) to Random.nextInt(0, 3)
     field[randCell.first][randCell.second] = 2
     val res  = listOf<List<Int>>(

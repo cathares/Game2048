@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -16,20 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavGraph
 import com.example.game2048.destinations.GameScreenDestination
 import com.example.game2048.ui.theme.Bebas
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 
@@ -145,7 +139,7 @@ fun GameScreen(navigator: DestinationsNavigator) {
         )
         {
             fontOfField()
-            gamingProcess(currPos)
+            GamingProcess(currPos)
             Log.e("Currpos", "${currPos.value}")
         }
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.offset(0.dp, 25.dp)) {
@@ -193,7 +187,7 @@ fun GameScreen(navigator: DestinationsNavigator) {
 
 @ExperimentalMaterialApi
 @Composable
-fun gamingProcess(currPos: MutableState<List<List<Int>>>) {
+fun GamingProcess(currPos: MutableState<List<List<Int>>>) {
     Log.e("FIELD", "${currPos.value}")
     var rememberedCells: Array<Array<MutableState<Int>>> =
         Array(4) { Array(4) { mutableStateOf(0) } }
@@ -202,12 +196,6 @@ fun gamingProcess(currPos: MutableState<List<List<Int>>>) {
             rememberedCells[i][j] = remember { mutableStateOf(currPos.value[i][j]) }
         }
     }
-    val swipeableStateX = rememberSwipeableState(0)
-    val swipeableStateY = rememberSwipeableState(0)
-    val sizePx = with(LocalDensity.current) { 95.dp.toPx() }
-    val anchors = mapOf(-0f to 0, sizePx to 1, -sizePx to -1)
-
-    //LaunchedEffect(key1 = , block = )
     Row()
     {
         Column()
