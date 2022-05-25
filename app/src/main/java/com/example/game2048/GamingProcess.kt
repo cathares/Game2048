@@ -7,6 +7,17 @@ import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+fun gameStart(): List<List<Int>> {
+    val field = Array(4) { Array(4) { 0 } }
+    val start: Pair<Int, Int> = Random.nextInt(0, 3) to Random.nextInt(0, 3)
+    field[start.first][start.second] = 2
+    return listOf(
+        listOf(field[0][0], field[0][1], field[0][2], field[0][3]),
+        listOf(field[1][0], field[1][1], field[1][2], field[1][3]),
+        listOf(field[2][0], field[2][1], field[2][2], field[2][3]),
+        listOf(field[3][0], field[3][1], field[3][2], field[3][3]),
+    )
+}
 
 fun moveCells(field: Array<Array<Int>>, direction: String): Array<Array<Int>> {
     when (direction) {
@@ -226,6 +237,7 @@ fun isMoveAvailable(currPos: List<List<Int>>, dir: String): Boolean {
     }
     return false
 }
+
 
 
 
