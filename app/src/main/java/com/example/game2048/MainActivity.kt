@@ -36,12 +36,12 @@ import kotlin.random.Random
 
 val Context.dataStore by dataStore("saved-data.json", GameRepositorySerializer)
 
+
 @ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val savedData = dataStore.data.collectAsState(initial = GameRepository()).value
             DestinationsNavHost(navGraph = NavGraphs.root)
         }
     }
@@ -54,11 +54,9 @@ class MainActivity : ComponentActivity() {
 fun MainMenu(
     navigator: DestinationsNavigator
 ) {
-
     val mainColor = Color(0xffE1C2F6)
     val secondColor = Color(0xffA73EED)
     val fontColor = Color(0xff8CA10A)
-
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val savedData = context.dataStore.data.collectAsState(initial = GameRepository()).value
@@ -72,15 +70,19 @@ fun MainMenu(
     {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.offset(0.dp,350.dp)
+            modifier = Modifier.offset(0.dp, 350.dp)
         ) {
-            Button(onClick = {
-                scope.launch {
-                    updateField(emptyList(), 0, context)
-                }
-                navigator.navigate(GameScreenDestination)
-            },
-                colors = ButtonDefaults.buttonColors(backgroundColor = secondColor, contentColor = fontColor),
+            Button(
+                onClick = {
+                    scope.launch {
+                        updateField(emptyList(), 0, context)
+                    }
+                    navigator.navigate(GameScreenDestination)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = secondColor,
+                    contentColor = fontColor
+                ),
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .padding(10.dp)
@@ -89,12 +91,16 @@ fun MainMenu(
                 Text("New game", fontSize = 60.sp, fontFamily = Bebas)
             }
 
-            Button(onClick = {
-                if (savedData.savedField.isNotEmpty()) {
-                    navigator.navigate(GameScreenDestination)
-                }
-                             },
-                colors = ButtonDefaults.buttonColors(backgroundColor = secondColor, contentColor = fontColor),
+            Button(
+                onClick = {
+                    if (savedData.savedField.isNotEmpty()) {
+                        navigator.navigate(GameScreenDestination)
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = secondColor,
+                    contentColor = fontColor
+                ),
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .padding(10.dp)
@@ -104,11 +110,15 @@ fun MainMenu(
             }
         }
     }
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .offset(0.dp, 100.dp),
-        horizontalArrangement = Arrangement.Center) {
-        Text("2048",style = TextStyle(fontSize = 80.sp, color = fontColor, fontFamily = Bebas),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(0.dp, 100.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "2048",
+            style = TextStyle(fontSize = 80.sp, color = fontColor, fontFamily = Bebas),
         )
     }
 }
@@ -125,16 +135,18 @@ fun GameScreen(navigator: DestinationsNavigator) {
     val secondColor = Color(0xffA73EED)
     val fontColor = Color(0xff8CA10A)
     val best = savedData.bestScore
-    var currPos = remember { mutableStateOf(gameStart())}
-    var rememberedCells: Array<Array<MutableState<Int>>> =
+    val currPos = remember { mutableStateOf(gameStart()) }
+    val rememberedCells: Array<Array<MutableState<Int>>> =
         Array(4) { Array(4) { mutableStateOf(0) } }
-    val score = remember { mutableStateOf(0)}
+    val score = remember { mutableStateOf(0) }
     val updateBestScope = rememberCoroutineScope()
     val updateFieldScope = rememberCoroutineScope()
+
     if (savedData.savedField.isNotEmpty()) {
         currPos.value = savedData.savedField
         score.value = savedData.savedScore
     }
+
     Box(
         Modifier
             .background(mainColor)
@@ -154,7 +166,12 @@ fun GameScreen(navigator: DestinationsNavigator) {
                 text = "score:\n${score.value}",
                 modifier = Modifier
                     .padding(5.dp),
-                style = TextStyle(fontFamily = Bebas, fontSize = 40.sp, color = fontColor, textAlign = TextAlign.Center)
+                style = TextStyle(
+                    fontFamily = Bebas,
+                    fontSize = 40.sp,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                )
             )
         }
         Box(
@@ -170,7 +187,12 @@ fun GameScreen(navigator: DestinationsNavigator) {
                 text = "Best:\n$best",
                 modifier = Modifier
                     .padding(5.dp),
-                style = TextStyle(fontFamily = Bebas, fontSize = 40.sp, color = fontColor,textAlign = TextAlign.Center)
+                style = TextStyle(
+                    fontFamily = Bebas,
+                    fontSize = 40.sp,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                )
             )
         }
     }
@@ -178,8 +200,8 @@ fun GameScreen(navigator: DestinationsNavigator) {
         Box(
             Modifier
                 .padding(0.dp, 132.dp)
-                .size(380.dp, 380.dp)
                 .border(10.dp, color = Color.DarkGray)
+                .size(380.dp, 380.dp)
         )
         {
             BackField()
@@ -190,7 +212,10 @@ fun GameScreen(navigator: DestinationsNavigator) {
                 }
             }
         }
-        Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.offset(0.dp, 25.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier.offset(0.dp, 25.dp)
+        ) {
             Button(
                 onClick = {
                     if (isMoveAvailable(currPos.value, "Left")) {
@@ -205,7 +230,8 @@ fun GameScreen(navigator: DestinationsNavigator) {
                     .width(75.dp)
                     .height(250.dp)
                     .offset(0.dp, (-100).dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray))
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
+            )
             {}
             Column {
                 Button(
@@ -217,7 +243,7 @@ fun GameScreen(navigator: DestinationsNavigator) {
                                 updateField(currPos.value, score.value, context)
                             }
                         }
-                              },
+                    },
                     modifier = Modifier
                         .width(200.dp)
                         .height(75.dp)
@@ -228,12 +254,12 @@ fun GameScreen(navigator: DestinationsNavigator) {
                     onClick = {
                         if (isMoveAvailable(currPos.value, "Down")) {
                             score.value += makeTurn(currPos.value, "Down").second
-                            currPos.value = makeTurn(currPos.value,  "Down").first
+                            currPos.value = makeTurn(currPos.value, "Down").first
                         }
                         updateFieldScope.launch {
                             updateField(currPos.value, score.value, context)
                         }
-                              },
+                    },
                     modifier = Modifier
                         .width(200.dp)
                         .height(75.dp)
@@ -250,12 +276,13 @@ fun GameScreen(navigator: DestinationsNavigator) {
                             updateField(currPos.value, score.value, context)
                         }
                     }
-                          },
+                },
                 modifier = Modifier
                     .width(75.dp)
                     .height(300.dp)
                     .offset(0.dp, (-100).dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray))
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
+            )
             {}
         }
     }
@@ -270,7 +297,10 @@ fun GameScreen(navigator: DestinationsNavigator) {
 
 @ExperimentalMaterialApi
 @Composable
-fun GamingProcess(currPos: MutableState<List<List<Int>>>, rememberedCells: Array<Array<MutableState<Int>>>) {
+fun GamingProcess(
+    currPos: MutableState<List<List<Int>>>,
+    rememberedCells: Array<Array<MutableState<Int>>>
+) {
     for (i in 0..3) {
         for (j in 0..3) {
             rememberedCells[i][j].value = currPos.value[i][j]
@@ -278,33 +308,12 @@ fun GamingProcess(currPos: MutableState<List<List<Int>>>, rememberedCells: Array
     }
     Row()
     {
-        Column()
-        {
-            Cell(rememberedCells[0][0])
-            Cell(rememberedCells[1][0])
-            Cell(rememberedCells[2][0])
-            Cell(rememberedCells[3][0])
-        }
-        Column()
-        {
-            Cell(rememberedCells[0][1])
-            Cell(rememberedCells[1][1])
-            Cell(rememberedCells[2][1])
-            Cell(rememberedCells[3][1])
-        }
-        Column()
-        {
-            Cell(rememberedCells[0][2])
-            Cell(rememberedCells[1][2])
-            Cell(rememberedCells[2][2])
-            Cell(rememberedCells[3][2])
-        }
-        Column()
-        {
-            Cell(rememberedCells[0][3])
-            Cell(rememberedCells[1][3])
-            Cell(rememberedCells[2][3])
-            Cell(rememberedCells[3][3])
+        for (i in 0..3) {
+            Column() {
+                for (j in 0..3) {
+                    Cell(rememberedCells[j][i])
+                }
+            }
         }
     }
 }
@@ -352,22 +361,24 @@ fun Cell(num: MutableState<Int>) {
     }
     Box(
         modifier = Modifier
-            .size(95.dp, 95.dp)
-            .border(width = 5.dp, color = Color.DarkGray),
+            .border(width = 5.dp, color = Color.DarkGray)
+            .size(95.dp, 95.dp),
+        contentAlignment = Alignment.Center
 
-    )
+        )
     {
         if (num.value != 0) {
             Text(
                 modifier = Modifier
                     .background(color = color.value)
-                    .fillMaxSize(),
+                    .size(85.dp)
+                    .offset(0.dp,10.dp),
                 text = "${num.value}",
                 textAlign = TextAlign.Center,
                 style = TextStyle(
                     color = Color.White,
                     fontFamily = Bebas,
-                    fontSize = 60.sp
+                    fontSize = 48.sp
                 )
             )
         }
@@ -379,6 +390,7 @@ suspend fun updateField(curr: List<List<Int>>, score: Int, context: Context) {
         it.copy(savedField = curr, savedScore = score)
     }
 }
+
 suspend fun updateBest(curr: Int, context: Context) {
     context.dataStore.updateData {
         it.copy(bestScore = curr)
@@ -392,10 +404,15 @@ fun GameOverDialog(score: Int, best: Int, navigator: DestinationsNavigator) {
     val mainColor = Color(0xffE1C2F6)
     val secondColor = Color(0xffA73EED)
     val fontColor = Color(0xff8CA10A)
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(color = mainColor))
-    Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = mainColor)
+    )
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Box(
             Modifier
                 .offset(0.dp, 20.dp)
@@ -409,7 +426,12 @@ fun GameOverDialog(score: Int, best: Int, navigator: DestinationsNavigator) {
                 text = "score:\n${score}",
                 modifier = Modifier
                     .padding(5.dp),
-                style = TextStyle(fontFamily = Bebas, fontSize = 40.sp, color = fontColor, textAlign = TextAlign.Center)
+                style = TextStyle(
+                    fontFamily = Bebas,
+                    fontSize = 40.sp,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                )
             )
         }
         Box(
@@ -423,31 +445,47 @@ fun GameOverDialog(score: Int, best: Int, navigator: DestinationsNavigator) {
         {
             Text(
                 text = "Best:\n$best",
-                modifier = Modifier
-                    .padding(5.dp),
-                style = TextStyle(fontFamily = Bebas, fontSize = 40.sp, color = fontColor,textAlign = TextAlign.Center)
+                modifier = Modifier.padding(5.dp),
+                style = TextStyle(
+                    fontFamily = Bebas,
+                    fontSize = 40.sp,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                )
             )
         }
     }
-    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-        Column( verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-            Box(modifier = Modifier
-                .padding(50.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .size(250.dp, 95.dp),
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(50.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .size(250.dp, 95.dp),
                 Alignment.Center
-            ){
-                Text(text = "Game over!",
+            ) {
+                Text(
+                    text = "Game over!",
                     fontSize = 68.sp,
                     fontFamily = Bebas,
                     color = fontColor,
                     textAlign = TextAlign.Center
                 )
             }
-            Button(onClick = {
-                navigator.navigate(GameScreenDestination)
-            },
-                colors = ButtonDefaults.buttonColors(backgroundColor = secondColor, contentColor = fontColor),
+            Button(
+                onClick = {
+                    navigator.navigate(GameScreenDestination)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = secondColor,
+                    contentColor = fontColor
+                ),
                 modifier = Modifier
                     .padding(50.dp)
                     .clip(RoundedCornerShape(10.dp))
@@ -455,10 +493,14 @@ fun GameOverDialog(score: Int, best: Int, navigator: DestinationsNavigator) {
             ) {
                 Text("New game", fontSize = 60.sp, fontFamily = Bebas)
             }
-            Button(onClick = {
-                navigator.navigate(MainMenuDestination)
-            },
-                colors = ButtonDefaults.buttonColors(backgroundColor = secondColor, contentColor = fontColor),
+            Button(
+                onClick = {
+                    navigator.navigate(MainMenuDestination)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = secondColor,
+                    contentColor = fontColor
+                ),
                 modifier = Modifier
                     .padding(50.dp)
                     .clip(RoundedCornerShape(10.dp))

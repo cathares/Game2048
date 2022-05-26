@@ -192,7 +192,7 @@ fun makeTurn(currPos: List<List<Int>>, direction: String): Pair<List<List<Int>>,
         field[emptyCells[posToAdd].first][emptyCells[posToAdd].second] = 2
     }
 
-    val res  = listOf<List<Int>>(
+    val res  = listOf(
         listOf(field[0][0], field[0][1], field[0][2], field[0][3]),
         listOf(field[1][0], field[1][1], field[1][2], field[1][3]),
         listOf(field[2][0], field[2][1], field[2][2], field[2][3]),
