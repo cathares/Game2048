@@ -1,9 +1,5 @@
 package com.example.game2048
 
-import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -11,12 +7,7 @@ fun gameStart(): List<List<Int>> {
     val field = Array(4) { Array(4) { 0 } }
     val start: Pair<Int, Int> = Random.nextInt(0, 3) to Random.nextInt(0, 3)
     field[start.first][start.second] = 2
-    return listOf(
-        listOf(field[0][0], field[0][1], field[0][2], field[0][3]),
-        listOf(field[1][0], field[1][1], field[1][2], field[1][3]),
-        listOf(field[2][0], field[2][1], field[2][2], field[2][3]),
-        listOf(field[3][0], field[3][1], field[3][2], field[3][3]),
-    )
+    return arrToList(field)
 }
 
 fun moveCells(field: Array<Array<Int>>, direction: String): Array<Array<Int>> {
@@ -192,12 +183,7 @@ fun makeTurn(currPos: List<List<Int>>, direction: String): Pair<List<List<Int>>,
         field[emptyCells[posToAdd].first][emptyCells[posToAdd].second] = 2
     }
 
-    val res  = listOf(
-        listOf(field[0][0], field[0][1], field[0][2], field[0][3]),
-        listOf(field[1][0], field[1][1], field[1][2], field[1][3]),
-        listOf(field[2][0], field[2][1], field[2][2], field[2][3]),
-        listOf(field[3][0], field[3][1], field[3][2], field[3][3]),
-    )
+    val res  = arrToList(field)
     return Pair(res, fieldAndScore.second)
 }
 
@@ -218,6 +204,7 @@ fun isGameOver(currPos: List<List<Int>>): Boolean {
     }
     return true
 }
+
 fun isMoveAvailable(currPos: List<List<Int>>, dir: String): Boolean {
     var field: Array<Array<Int>> = Array(4) {Array(4) {0} }
     for (i in 0..3) {
@@ -238,130 +225,10 @@ fun isMoveAvailable(currPos: List<List<Int>>, dir: String): Boolean {
     return false
 }
 
-
-
-
-
-
-
-
-/*
-@Composable
-fun anchorsEncounterY(field: Array<Array<Int>>, currPos: Pair<Int, Int>): Map<Float, Int> {
-    var anchorUp = 0f
-    var anchorDown = -0f
-    val num = field[currPos.first][currPos.second]
-    var column = arrayOf<Int>(0, 0, 0, 0)
-    for (i in 0..3) {
-        column[i] = field[i][currPos.second]
-    }
-    if (currPos == Pair(1,0)) {
-        for (i in 0..3) {
-                Log.e("Field", "i: $i, Field: ${column[i]}")
-        }
-    }
-    for (i in currPos.first..2) {
-        if (column[i+1] == 0) {
-            anchorDown++
-            column[i+1] = column[i]
-            column[i] = 0
-        }
-        else if (column[i+1] == column[i]) {
-            anchorDown++
-            column[i+1] = 0
-        }
-    }
-    for (i in 0..3) {
-        column[i] = field[i][currPos.second]
-    }
-
-    for (i in currPos.first downTo 1) {
-        if (column[i-1] == 0) {
-            anchorUp++
-            column[i-1] = column[i]
-            column[i] = 0
-        }
-        else if (column[i-1] == column[i]) {
-            anchorUp++
-            column[i-1] = 0
-        }
-    }
-    val sizePx = with(LocalDensity.current) { 95.dp.toPx() }
-    var anchors = mutableMapOf<Float, Int>()
-    if (currPos.first == 3) {
-        anchors[-0.0f] = -1
-        anchors[sizePx * anchorUp] = 1
-        anchors[0.0f] = 0
-    }
-    else if (currPos.first == 0) {
-        anchors[0f] = 1
-        anchors[sizePx * anchorDown] = -1
-        anchors[0.0f] = 0
-    }
-    else {
-        anchors[sizePx * anchorUp] = 1
-        anchors[-sizePx * anchorDown] = -1
-        anchors[0.0f] = 0
-        if (currPos == Pair(1,0)) {
-            Log.e("Anchors01", "Up: $anchorUp, Down: $anchorDown")
-        }
-    }
-    return anchors
-}
-
-@Composable
-fun anchorsEncounterX(field: Array<Array<Int>>, currPos: Pair<Int, Int>): Map<Float, Int> {
-    var anchorRight = 0f
-    var anchorLeft = -0f
-    val num = field[currPos.first][currPos.second]
-    var column = arrayOf<Int>(0, 0, 0, 0)
-    for (i in 0..3) {
-        column[i] = field[currPos.first][i]
-    }
-    for (i in currPos.second..2) {
-        if (column[i+1] == 0) {
-            anchorRight++
-            column[i+1] = column[i]
-            column[i] = 0
-        }
-        else if (column[i+1] == column[i]) {
-            anchorRight++
-            column[i+1] = 0
-        }
-    }
-    for (i in 0..3) {
-        column[i] = field[i][currPos.second]
-    }
-
-    for (i in currPos.second downTo 1) {
-        if (column[i-1] == 0) {
-            anchorLeft++
-            column[i-1] = column[i]
-            column[i] = 0
-        }
-        else if (column[i-1] == column[i]) {
-            anchorLeft++
-            column[i-1] = 0
-        }
-    }
-    val sizePx = with(LocalDensity.current) { 95.dp.toPx() }
-    var anchors = mutableMapOf<Float, Int>()
-    if (currPos.second == 3) {
-        anchors[0f] = 1
-        anchors[sizePx * anchorLeft] = -1
-        anchors[0.0f] = 0
-    }
-    else if (currPos.second == 0) {
-        anchors[-0f] = -1
-        anchors[sizePx * anchorRight] = 1
-        anchors[0.0f] = 0
-    }
-    else {
-        anchors[sizePx * anchorRight] = 1
-        anchors[sizePx * anchorLeft] = -1
-        anchors[0.0f] = 0
-    }
-    return anchors
-}
-
- */
+fun arrToList(field:Array<Array<Int>>): List<List<Int>> =
+        listOf(
+        listOf(field[0][0], field[0][1], field[0][2], field[0][3]),
+        listOf(field[1][0], field[1][1], field[1][2], field[1][3]),
+        listOf(field[2][0], field[2][1], field[2][2], field[2][3]),
+        listOf(field[3][0], field[3][1], field[3][2], field[3][3])
+            )

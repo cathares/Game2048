@@ -1,7 +1,6 @@
-package com.example.game2048.ui.theme
+package com.example.game2048
 
 import androidx.datastore.core.Serializer
-import com.example.game2048.GameRepository
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.InputStream

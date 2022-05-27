@@ -4,12 +4,10 @@ package com.example.game2048
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -27,12 +25,10 @@ import androidx.datastore.dataStore
 import com.example.game2048.destinations.GameScreenDestination
 import com.example.game2048.destinations.MainMenuDestination
 import com.example.game2048.ui.theme.Bebas
-import com.example.game2048.ui.theme.GameRepositorySerializer
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 val Context.dataStore by dataStore("saved-data.json", GameRepositorySerializer)
 
